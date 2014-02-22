@@ -1,0 +1,16 @@
+{
+  "name": "MultiVision",
+  "version": "0.0.0",
+  "authors": [
+    "John Beadles <jbeardles@gmail.com>"
+  ],
+  "description": "\"Extreme Tech Training\"",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "toastr": "~2.0.1",
+    "angular": "~1.2.13",
+    "angular-resource": "~1.2.13",
+    "angular-route": "~1.2.13"
+  }
+}
