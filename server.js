@@ -1,5 +1,6 @@
 var express = require('express'),
-    stylus = require('stylus');
+    stylus = require('stylus'),
+    mongoose = require('mongoose');
 
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -21,14 +22,35 @@ app.configure(function() {
     app.use(express.static(__dirname + '/public'));
 });
 
+if(env === 'development') {
+    mongoose.connect('mongodb://localhost/multivision');
+} else {
+    mongoose.connect('mongodb://beardles:beardles@ds033419.mongolab.com:33419/multivisions');
+}
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error...'));
+db.once('open', function callback() {
+    console.log('multivisions db opened');
+});
+var messageSchema = mongoose.Schema({
+    message: String
+});
+var Message = mongoose.model('Message', messageSchema);
+var mongoMessage;
+Message.findOne().exec(function(err, messageDoc) {
+    mongoMessage = messageDoc.message;
+});
+
 app.get('/partials/:partialPath', function(req, res) {
     res.render('partials/' + req.params.partialPath);
 });
 
 app.get('*', function(req, res) {
-    res.render('index');
+    res.render('index', {
+        mongoMessage: mongoMessage
+    });
 });
 
-var port = 3030;
+var port = process.env.PORT || 3030;
 app.listen(port);
 console.log('Listening on port ' + port + '...');
